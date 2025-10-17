@@ -6,26 +6,7 @@ For a list people in computer vision listed with their academic genealogy, pleas
 
 ## Quickstart Demo Project
 
-Want to see a few classic computer-vision techniques in action? Try the pure-Python [simple demo project](examples/simple_cv_project/README.md). It generates a synthetic scene, runs edge and corner detectors, and writes portable PPM/PGM images you can inspect locally without extra dependencies. The MVP now includes:
-
-- A browser viewer with accessibility-minded status messaging, live regeneration controls, and last-run metadata so students know which dataset they are reviewing.
-- Zero-dependency regression tests (`python -m unittest discover -s tests -t .` or `make test`) that lock in the numeric summaries and HTTP behaviour.
-- Module and Makefile entry-points (`python -m examples.simple_cv_project` or `make demo`) for quick launches, plus documentation of real-world runtimes across supported image sizes.
-
-Run `python -m examples.simple_cv_project.server --generate-only` to refresh the assets, or start the UI without extra flags to explore the gallery directly in your browser.
-
-### Local testing checklist for the MVP demo
-
-If you want to vet the demo locally before contributing changes, the following
-commands cover the common workflows:
-
-1. **Regenerate artifacts only** – `make generate SIZE=256`
-2. **Launch the interactive viewer** – `make demo SIZE=256`
-3. **Run the regression suite** – `make test`
-4. **Clear generated files** – `make clean`
-
-All commands rely solely on the Python standard library so they work without
-additional dependencies.
+Want to see a few classic computer-vision techniques in action? Try the self-contained [simple demo project](examples/simple_cv_project/README.md). It generates a synthetic scene, runs edge and corner detectors, and saves annotated visualizations you can inspect locally.
 
 ## Contributing
 Please feel free to send me [pull requests](https://github.com/jbhuang0604/awesome-computer-vision/pulls) or email (jbhuang@vt.edu) to add links.
