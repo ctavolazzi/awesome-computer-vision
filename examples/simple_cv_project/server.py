@@ -13,11 +13,27 @@ from pathlib import Path
 from typing import Iterator, Tuple
 from urllib.parse import parse_qs, urlparse
 
-PROJECT_DIR = Path(__file__).resolve().parent
-OUTPUT_DIR = PROJECT_DIR / "output"
-DEFAULT_SIZE = 256
-MIN_SIZE = 128
-MAX_SIZE = 512
+if __package__:
+    from .config import (
+        DEFAULT_OUTPUT_DIR,
+        DEFAULT_SIZE,
+        MAX_SIZE,
+        MIN_SIZE,
+        PROJECT_DIR,
+        parse_size_argument,
+        validate_size,
+    )
+else:  # pragma: no cover - execution as a script
+    from config import (
+        DEFAULT_OUTPUT_DIR,
+        DEFAULT_SIZE,
+        MAX_SIZE,
+        MIN_SIZE,
+        PROJECT_DIR,
+        parse_size_argument,
+        validate_size,
+    )
+
 IO_LOCK = threading.Lock()
 try:  # pragma: no cover - exercised via package imports
     from . import main as pipeline
@@ -28,6 +44,7 @@ except ImportError:  # pragma: no cover - fallback when executed as a script
 
 
 def ensure_outputs(output_dir: Path, size: int) -> dict:
+    validate_size(size)
     with IO_LOCK:
         scene = pipeline.create_synthetic_scene(size=size)
         outputs = pipeline.run_pipeline(scene)
@@ -95,11 +112,10 @@ class DemoRequestHandler(SimpleHTTPRequestHandler):
             self.send_error(400, "size must be an integer")
             return None
 
-        if not (MIN_SIZE <= parsed_size <= MAX_SIZE):
-            self.send_error(
-                400,
-                f"size must be between {MIN_SIZE} and {MAX_SIZE} pixels",
-            )
+        try:
+            validate_size(parsed_size)
+        except ValueError as exc:
+            self.send_error(400, str(exc))
             return None
 
         return parsed_size
@@ -107,7 +123,7 @@ class DemoRequestHandler(SimpleHTTPRequestHandler):
 
 @contextlib.contextmanager
 def serve(
-    directory: Path, host: str, port: int, output_dir: Path = OUTPUT_DIR
+    directory: Path, host: str, port: int, output_dir: Path = DEFAULT_OUTPUT_DIR
 ) -> Iterator[ThreadingHTTPServer]:
     handler = partial(
         DemoRequestHandler,
@@ -129,26 +145,13 @@ def pick_port(host: str, requested: int) -> Tuple[str, int]:
         return sock.getsockname()
 
 
-def image_size(value: str) -> int:
-    try:
-        size = int(value)
-    except ValueError as exc:  # pragma: no cover - argparse handles messaging
-        raise argparse.ArgumentTypeError("size must be an integer") from exc
-
-    if not (MIN_SIZE <= size <= MAX_SIZE):
-        raise argparse.ArgumentTypeError(
-            f"size must be between {MIN_SIZE} and {MAX_SIZE}"
-        )
-    return size
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="127.0.0.1", help="Interface to bind the HTTP server")
     parser.add_argument("--port", type=int, default=8000, help="Port for the HTTP server (0 for random)")
     parser.add_argument(
         "--size",
-        type=image_size,
+        type=parse_size_argument,
         default=DEFAULT_SIZE,
         help=(
             f"Image size to generate before serving (between {MIN_SIZE} and {MAX_SIZE} pixels)"
@@ -157,7 +160,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=OUTPUT_DIR,
+        default=DEFAULT_OUTPUT_DIR,
         help="Directory where generated artifacts are stored",
     )
     parser.add_argument(

@@ -36,7 +36,7 @@ The images are written in the portable PPM/PGM text formats, which most image vi
 
 ### Customization
 
-Use `--size` to change the rendered resolution (higher values provide more detail at the cost of runtime) and `--output` to override the destination directory. The demo has been tuned for sizes between **128** and **512** pixels:
+Use `--size` to change the rendered resolution (higher values provide more detail at the cost of runtime) and `--output` to override the destination directory. The CLI now enforces the supported range between **128** and **512** pixels, matching the browser viewer:
 
 ```bash
 python main.py --size 384 --output ./my_outputs

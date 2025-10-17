@@ -1,5 +1,15 @@
 """Pure Python computer-vision demo package."""
 
+from .config import (
+    DEFAULT_OUTPUT_DIR,
+    DEFAULT_SIZE,
+    MAX_SIZE,
+    MIN_SIZE,
+    PROJECT_DIR,
+    SIZE_STEP,
+    parse_size_argument,
+    validate_size,
+)
 from .main import (
     PipelineOutputs,
     collect_image_metadata,
@@ -10,6 +20,14 @@ from .main import (
 )
 
 __all__ = [
+    "DEFAULT_OUTPUT_DIR",
+    "DEFAULT_SIZE",
+    "MAX_SIZE",
+    "MIN_SIZE",
+    "PROJECT_DIR",
+    "SIZE_STEP",
+    "parse_size_argument",
+    "validate_size",
     "PipelineOutputs",
     "collect_image_metadata",
     "compute_image_statistics",

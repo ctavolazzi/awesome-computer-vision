@@ -10,6 +10,23 @@ from pathlib import Path
 from statistics import mean
 from typing import List, Sequence, Tuple, Union
 
+if __package__:
+    from .config import (
+        DEFAULT_OUTPUT_DIR,
+        DEFAULT_SIZE,
+        MAX_SIZE,
+        MIN_SIZE,
+        parse_size_argument,
+    )
+else:  # pragma: no cover - execution as a script
+    from config import (
+        DEFAULT_OUTPUT_DIR,
+        DEFAULT_SIZE,
+        MAX_SIZE,
+        MIN_SIZE,
+        parse_size_argument,
+    )
+
 ColorPixel = Tuple[int, int, int]
 ColorImage = List[List[ColorPixel]]
 GrayImage = List[List[int]]
@@ -390,14 +407,17 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--size",
-        type=int,
-        default=256,
-        help="Width/height of the generated square scene in pixels (default: 256)",
+        type=parse_size_argument,
+        default=DEFAULT_SIZE,
+        help=(
+            f"Width/height of the generated square scene in pixels "
+            f"(between {MIN_SIZE} and {MAX_SIZE}; default: {DEFAULT_SIZE})"
+        ),
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).resolve().parent / "output",
+        default=DEFAULT_OUTPUT_DIR,
         help="Directory to store output images (default: ./output)",
     )
     return parser.parse_args()
