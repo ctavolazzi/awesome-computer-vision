@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pure Python CV Demo Viewer</title>
+    <link rel="stylesheet" href="static/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#pipeline">Skip to pipeline outputs</a>
+    <div class="page">
+      <header class="masthead" role="banner">
+        <div class="masthead__content">
+          <p class="masthead__eyebrow">Pure Python computer vision toolkit</p>
+          <h1 class="masthead__title">Visualize the pipeline outputs at a glance</h1>
+          <p class="masthead__summary">
+            This viewer renders each stage of the demo pipeline directly in the
+            browser. Regenerate the assets, review the pixel statistics, and download
+            the underlying Netpbm files without installing anything beyond Python.
+          </p>
+          <ul class="masthead__steps">
+            <li><span>1</span>Choose a size and run the generator.</li>
+            <li><span>2</span>Compare the intermediate canvases.</li>
+            <li><span>3</span>Download the sources for deeper inspection.</li>
+          </ul>
+        </div>
+        <dl class="masthead__meta">
+          <div class="masthead__meta-item">
+            <dt>Pipeline stages</dt>
+            <dd>Synthetic scene, grayscale, blur, edges, corners</dd>
+          </div>
+          <div class="masthead__meta-item">
+            <dt>Output format</dt>
+            <dd>Plain PPM/PGM (Netpbm)</dd>
+          </div>
+          <div class="masthead__meta-item">
+            <dt>Supported sizes</dt>
+            <dd>128&ndash;512 px in 32 px steps</dd>
+          </div>
+        </dl>
+      </header>
+
+      <main class="layout" id="main-content">
+        <aside class="layout__sidebar" aria-labelledby="sidebar-title">
+          <h2 class="sr-only" id="sidebar-title">Pipeline controls and statistics</h2>
+          <section class="panel controls" aria-labelledby="controls-title">
+            <header class="panel__header">
+              <h3 id="controls-title">Regenerate outputs</h3>
+              <p>
+                Pick a target resolution and let the server rebuild the images. Sizes
+                are validated before processing, so stay within the supported range.
+              </p>
+            </header>
+            <form class="controls__form" id="regenerate-form" novalidate>
+              <label class="controls__label" for="image-size">Image size</label>
+              <div class="controls__inputs">
+                <input
+                  type="number"
+                  id="image-size"
+                  name="size"
+                  min="128"
+                  max="512"
+                  step="32"
+                  value="256"
+                  required
+                />
+                <button type="submit" id="regenerate-button">Regenerate</button>
+              </div>
+            </form>
+            <p
+              class="status"
+              id="status-message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></p>
+            <p class="status status--meta" aria-live="polite">
+              <span class="status__label">Last generation:</span>
+              <time id="last-run">Loading…</time>
+            </p>
+          </section>
+
+          <section
+            class="panel stats"
+            aria-live="polite"
+            aria-busy="false"
+            aria-labelledby="stats-title"
+          >
+            <header class="panel__header">
+              <h3 id="stats-title">Image statistics</h3>
+              <p>Brightness metrics are recomputed for every generated stage.</p>
+            </header>
+            <div class="stats__grid" id="stats"></div>
+          </section>
+        </aside>
+
+        <section
+          class="panel gallery"
+          id="pipeline"
+          aria-labelledby="pipeline-title"
+          aria-busy="false"
+        >
+          <header class="panel__header">
+            <h3 id="pipeline-title">Pipeline outputs</h3>
+            <p>
+              Each card displays a canvas rendered from the Netpbm source. Open the
+              download link to save the original data for other experiments.
+            </p>
+          </header>
+          <div class="gallery__grid" id="gallery"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="image-card">
+      <article class="card">
+        <header class="card__header">
+          <h3 class="card__title"></h3>
+          <a class="card__download" href="#" download>Download source</a>
+        </header>
+        <canvas class="card__canvas" width="256" height="256" role="img"></canvas>
+      </article>
+    </template>
+
+    <template id="stat-row">
+      <div class="stat">
+        <span class="stat__name"></span>
+        <span class="stat__value"></span>
+      </div>
+    </template>
+
+    <script type="module" src="static/app.js"></script>
+  </body>
+</html>
