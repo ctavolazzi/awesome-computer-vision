@@ -4,6 +4,16 @@ A curated list of awesome computer vision resources, inspired by [awesome-php](h
 
 For a list people in computer vision listed with their academic genealogy, please visit [here](https://github.com/jbhuang0604/awesome-computer-vision/blob/master/people.md)
 
+## Quickstart Demo Project
+
+Want to see a few classic computer-vision techniques in action? Try the pure-Python [simple demo project](examples/simple_cv_project/README.md). It generates a synthetic scene, runs edge and corner detectors, and writes portable PPM/PGM images you can inspect locally without extra dependencies. The MVP now includes:
+
+- A browser viewer with accessibility-minded status messaging, live regeneration controls, and last-run metadata so students know which dataset they are reviewing.
+- Zero-dependency regression tests (`python -m unittest discover -s tests -t .` or `make test`) that lock in the numeric summaries and HTTP behaviour.
+- Module and Makefile entry-points (`python -m examples.simple_cv_project` or `make demo`) for quick launches, plus documentation of real-world runtimes across supported image sizes.
+
+Run `python -m examples.simple_cv_project.server --generate-only` to refresh the assets, or start the UI without extra flags to explore the gallery directly in your browser.
+
 ## Contributing
 Please feel free to send me [pull requests](https://github.com/jbhuang0604/awesome-computer-vision/pulls) or email (jbhuang@vt.edu) to add links.
 
