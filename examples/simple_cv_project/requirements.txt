@@ -1,2 +1,3 @@
-# This demo intentionally relies only on the Python standard library.
-# No external packages are required.
+opencv-python
+numpy
+matplotlib
